@@ -9,9 +9,9 @@ docker compose up -d
 ```
 🌐 Servicios disponibles
 
-# Kafka: http://localhost:19000/
-# Micro 1: http://localhost:8081/
-# Micro 2: http://localhost:8082/
+### Kafka: http://localhost:19000/
+### Micro 1: http://localhost:8081/
+### Micro 2: http://localhost:8082/
 
 # Endpoints (micro1) — Resumen
 
