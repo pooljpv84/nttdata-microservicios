@@ -1,0 +1,153 @@
+version: "3.9"
+
+services:
+  # === ZOOKEEPER + KAFKA (Confluent) ===
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      TZ: America/Guayaquil
+    networks: [knet]
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.1
+    container_name: kafka
+    depends_on: [zookeeper]
+    ports:
+      - "29092:29092"   # acceso desde host
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+      # listeners: interno (docker) y externo (host)
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      TZ: America/Guayaquil
+    networks: [knet]
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:4.0.2
+    container_name: kafdrop
+    depends_on: [kafka]
+    ports:
+      - "19000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:9092"
+      SERVER_SERVLET_CONTEXT_PATH: "/"
+      SERVER_PORT: "9000"
+      TZ: America/Guayaquil
+    networks: [knet]
+
+  # === MYSQLs ===
+  mysql_persona:
+    image: mysql:8.0
+    container_name: mysql_persona
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: persona_db
+      TZ: America/Guayaquil
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3307:3306"
+    volumes:
+      - persona_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD","mysqladmin","ping","-h","localhost","-uroot","-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [knet]
+
+  mysql_cuenta:
+    image: mysql:8.0
+    container_name: mysql_cuenta
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: cuenta_db
+      TZ: America/Guayaquil
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3308:3306"
+    volumes:
+      - cuenta_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD","mysqladmin","ping","-h","localhost","-uroot","-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [knet]
+
+  # === MICROS (build con Maven dentro del contenedor) ===
+  micro1:
+    build:
+      context: ./micro1
+      dockerfile: Dockerfile
+    container_name: micro1
+    environment:
+      # DB interna (hostname = nombre del servicio)
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_persona:3306/persona_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Guayaquil
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_FLYWAY_ENABLED: "true"
+      SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
+      # Kafka interno
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      # Puerto
+      SERVER_PORT: "8081"
+      TZ: America/Guayaquil
+    depends_on:
+      mysql_persona:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    ports:
+      - "8081:8081"
+    networks: [knet]
+
+  micro2:
+    build:
+      context: ./micro2
+      dockerfile: Dockerfile
+    container_name: micro2
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_cuenta:3306/cuenta_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Guayaquil
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_FLYWAY_ENABLED: "true"
+      SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
+      SPRING_FLYWAY_VALIDATE_ON_MIGRATE: "false"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SERVER_PORT: "8082"
+      TZ: America/Guayaquil
+    depends_on:
+      mysql_cuenta:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    ports:
+      - "8082:8082"
+    networks: [knet]
+
+volumes:
+  persona_data:
+  cuenta_data:
+
+networks:
+  knet:
+    driver: bridge

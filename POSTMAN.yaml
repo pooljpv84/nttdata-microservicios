@@ -1,0 +1,322 @@
+type: collection.insomnia.rest/5.0
+name: NTTDATA PAUL VELASCO
+meta:
+  id: wrk_406b0828076345a480c34b2e1d034a48
+  created: 1761616650376
+  modified: 1761691024983
+  description: ""
+collection:
+  - url: http://localhost:8081/api/clientes/postFull
+    name: 01 Crear Persona/Cliente
+    meta:
+      id: req_111932b30212408683d3c123bfcc4dcb
+      created: 1761616654917
+      modified: 1761683741037
+      isPrivate: false
+      description: ""
+      sortKey: -1761616654917
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "persona": {
+            "nombre": "Juan Osorio",
+            "identificacion": "3333333333",
+            "direccion": "13 de junio y equinoccial",
+            "telefono": "098874587"
+          },
+          "genero": "masculino",
+          "edad": 30,
+          "password": "1245",
+          "estado": true,
+          "clienteId": "003"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8081/api/clientes/getAllClientePersona
+    name: 02 Get All Personas/Clientes
+    meta:
+      id: req_50302c6b810f46008378285c80281b75
+      created: 1761619568062
+      modified: 1761663471323
+      isPrivate: false
+      description: ""
+      sortKey: -1761616654817
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8081/api/clientes/getClientePersona/9
+    name: 03 Get PersonaClienteByPK
+    meta:
+      id: req_c811b167d6334d9580b6ec72f40d614b
+      created: 1761620434492
+      modified: 1761626111168
+      isPrivate: false
+      description: ""
+      sortKey: -1761616654717
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8081/api/personas/delete/6
+    name: 04 Delete Only Clente ByPersonaId
+    meta:
+      id: req_beb63c8dc0e94e7fb1adc7a4470ec462
+      created: 1761620540252
+      modified: 1761626087197
+      isPrivate: false
+      description: ""
+      sortKey: -1761616654617
+    method: DELETE
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8081/api/clientes/put/9
+    name: 05 Update Persona/Cliente
+    meta:
+      id: req_8b16c788bbf34aa58c41c8517cd1a762
+      created: 1761620862201
+      modified: 1761626247120
+      isPrivate: false
+      description: ""
+      sortKey: -1761616654517
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "nombre": "Marieeeppee",
+        	"estado": true,
+        	"contrasenia": "123456"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8082/api/cuentas/post
+    name: 06 Crear Cuenta (Ahorros/Corriente)
+    meta:
+      id: req_918886541daa4776b820cbf719bf370c
+      created: 1761667438163
+      modified: 1761683950543
+      isPrivate: false
+      description: ""
+      sortKey: -1761616654417
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"numero": "585545",
+        	"tipo": "Corriente",
+        	"clienteId": "001",
+        	"saldo": 1000
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8082/api/cuentas/getAllCuentas
+    name: 07 Get All Cuentas
+    meta:
+      id: req_e5c672ba1d30421692c2925a079ba384
+      created: 1761673549967
+      modified: 1761677083904
+      isPrivate: false
+      description: ""
+      sortKey: -1761616654317
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8081/api/clientes/admin/publishAll
+    name: 00 Actualizar push en Micro 2
+    meta:
+      id: req_963505a1c33449adade79279453aaa72
+      created: 1761676004204
+      modified: 1761676078420
+      isPrivate: false
+      description: ""
+      sortKey: -1761676004204
+    method: POST
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8082/api/cuentas/getByCliente/23
+    name: 08 Get CuentaByClientePK
+    meta:
+      id: req_801105a7dd3640a9adf5646f87e1e51c
+      created: 1761676873010
+      modified: 1761677143968
+      isPrivate: false
+      description: ""
+      sortKey: -1754603427143.5
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8082/api/cuentas/patchEstado/1?activa=true
+    name: 09 Patch EstadoByCuentaPK
+    meta:
+      id: req_6d6a6ef69d3a461592b20340e4f0a5dc
+      created: 1761677166204
+      modified: 1761677383021
+      isPrivate: false
+      description: ""
+      sortKey: -1754603427043.5
+    method: PATCH
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8082/api/movimientos/postMovimiento
+    name: 10 Crear Movimiento
+    meta:
+      id: req_820c8f3b45b64adc86523fb867d9baa8
+      created: 1761681646408
+      modified: 1761689416347
+      isPrivate: false
+      description: ""
+      sortKey: -1754603426943.5
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "numeroCuenta": "496825",
+          "valor": 540,
+          "tipoMovimiento": "RETIRO"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8082/api/reportes?clienteId=2&desde=2025-01-01&hasta=2025-10-31
+    name: 11 Reportes By ClientePK Y FECHAS
+    meta:
+      id: req_13f3f1a7e4cb40aa8b24542df07abe03
+      created: 1761690478806
+      modified: 1761690970922
+      isPrivate: false
+      description: ""
+      sortKey: -1754603426843.5
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e7d4049e472a32986f93b3980af6ceb165802a43
+    created: 1761616650382
+    modified: 1761616650382
+environments:
+  name: Base Environment
+  meta:
+    id: env_e7d4049e472a32986f93b3980af6ceb165802a43
+    created: 1761616650380
+    modified: 1761616650380
+    isPrivate: false
