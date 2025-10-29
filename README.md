@@ -10,6 +10,10 @@ docker compose up -d
 🌐 Servicios disponibles
 
 Microservicio 1: http://localhost:8081/
+
+
 Microservicio 2: http://localhost:8082/
+
+
 Kafka: http://localhost:19000/
 
